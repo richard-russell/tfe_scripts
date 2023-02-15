@@ -7,6 +7,7 @@ from getpass import getpass
 import os
 import requests
 
+VERIFY = True  # verify API cert by default. Change to False to force less secure behaviour.
 PAGESIZE = 100
 TS_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
@@ -32,7 +33,7 @@ headers = { "Content-Type": "application/vnd.api+json",
             "Authorization": f"Bearer {TFE_TOKEN}"}
 
 # Find workspace details, primarily id
-r_ws = requests.get(f"{TFE_URL}/api/v2/organizations/{TFE_ORG}/workspaces/{TFE_WORKSPACE}", headers = headers )
+r_ws = requests.get(f"{TFE_URL}/api/v2/organizations/{TFE_ORG}/workspaces/{TFE_WORKSPACE}", headers = headers, verify = VERIFY)
 r_ws.raise_for_status()
 
 r_ws_data = r_ws.json()['data']
@@ -42,7 +43,7 @@ ws_rc = r_ws_data['attributes']['resource-count']
 print(f'Workspace name: {TFE_WORKSPACE}, id: {ws_id}, current resources: {ws_rc}')
 
 # Find last X runs (API max page size is 100)
-r_wsruns = requests.get(f"{TFE_URL}/api/v2/workspaces/ws-QrNpBYWE81qioYPT/runs?page%5Bsize%5D={PAGESIZE}", headers = headers)
+r_wsruns = requests.get(f"{TFE_URL}/api/v2/workspaces/{ws_id}/runs?page%5Bsize%5D={PAGESIZE}", headers = headers, verify = VERIFY)
 r_wsruns.raise_for_status()
 wsruns_data = r_wsruns.json()['data']
 
