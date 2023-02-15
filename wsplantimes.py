@@ -6,10 +6,15 @@ import datetime
 from getpass import getpass
 import os
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 VERIFY = True  # verify API cert by default. Change to False to force less secure behaviour.
 PAGESIZE = 100
 TS_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
+
+if VERIFY == False:
+    print('Certificate verification disabled. Use at your own risk!')
+    requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 def envorask(var, sensitive=False):
     """Retrieve environment variable called 'var', and if it
