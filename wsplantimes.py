@@ -58,11 +58,13 @@ print(f'Runs retrieved: {len(wsruns_data)}')
 run_ts_raw = [ (run['id'], run['attributes']['created-at'], run['attributes']['status-timestamps'].get('planning-at'), run['attributes']['status-timestamps'].get('planned-at')) for run in wsruns_data ]
 # Filter out missing data
 run_ts_filtered = [ x for x in run_ts_raw if (x[2] is not None) and (x[3] is not None) ]
-# Parse timestamps and calculate delta
-run_ts_dt = [ (x[0], x[1], datetime.datetime.strptime(x[3], TS_FORMAT) - datetime.datetime.strptime(x[2], TS_FORMAT)) for x in run_ts_filtered ]
+# Parse timestamps
+run_ts_dt = [ (x[0], x[1], datetime.datetime.strptime(x[2], TS_FORMAT), datetime.datetime.strptime(x[3], TS_FORMAT)) for x in run_ts_filtered ]
+# Calculate delta
+run_ts_delta = [ (x[0], x[1], x[3]-x[2]) for x in run_ts_dt ]
 
 # Print results
 print()
 print('run-id, created-at, duration')
-for run in run_ts_dt:
+for run in run_ts_delta:
     print(f'{run[0]}, {run[1]}, {run[2]}')
