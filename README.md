@@ -1,4 +1,4 @@
-# tfe_run_data
+# TFE Scripts
 Python scripts for extracting run data from TFE/TFC via API.
 
 ## Workspace Run Times
@@ -14,5 +14,19 @@ Prompts for the following values, which can also be supplied as environment vari
 TFE_URL
 TFE_ORG
 TFE_WORKSPACE
+TFE_TOKEN
+```
+
+## Workspace Resource Counts
+Prints a list of all workspaces in the specified org, and the count of resources. 
+
+Run as follows:
+```
+> python wsresources.py
+```
+Prompts for the following values, which can also be supplied as environment variables:
+```
+TFE_URL
+TFE_ORG
 TFE_TOKEN
 ```
