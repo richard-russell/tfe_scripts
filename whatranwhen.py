@@ -55,6 +55,7 @@ def getallpagedata(url, headers):
 def getrundata(url, headers, start_time):
     """Retrieve data from pages of the run API.
        If the oldest run in a page is older than the specified start time, don't request any more pages.
+       This speeds up the script significantly assuming the time window is recent. 
     """
     # print(f'getting page: {url}')
     r = requests.get(url, headers = headers)
@@ -89,17 +90,9 @@ wslist = getallpagedata(f"{TFE_URL}/api/v2/organizations/{TFE_ORG}/workspaces?pa
 # Extract list of ws ids and names
 wsids = [ (x['id'], x['attributes']['name']) for x in wslist ]
 
+print("workspace, run_id, created-at")
 for wsid, wsname in wsids:
     wsruns = getrundata(f"{TFE_URL}/api/v2/workspaces/{wsid}/runs?page%5Bsize%5d={PAGESIZE}", headers, args.start_time)
     for run in wsruns:
         if args.start_time < run['attributes']['created-at'] < args.end_time:
-            print(f"{wsname} - {run['id']} - {run['attributes']['created-at']}")
-
-
-
-# print(f'Total workspaces: {len(wsr_sorted)}')
-
-# print()
-# print('name, resource-count')
-# for ws in wsr_sorted:
-#     print(f'{ws[0]}, {ws[1]}')
+            print(f"{wsname}, {run['id']}, {run['attributes']['created-at']}")
